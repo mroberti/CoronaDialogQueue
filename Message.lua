@@ -18,16 +18,27 @@ local Message_mt = { __index = Message }	-- metatable
 function Message.new(passedGroup,passedString )
      local newMessage = {
           myText = nil,
+          dead = false
      }
-     newMessage.myText = display.newText( passedString,math.random(0,screenW),math.random(0,screenH), 300, 100, nil, 6 )
+     newMessage.myText = display.newText( passedString,0,0, 300, 35, nil, 6 )
      print("Adding text!")
      return setmetatable( newMessage, Message_mt )
 end
 
-function Message:Destroy()
-     local child = self.myText
-     display.remove( child )
-     child = nil
+function Message:Initialize()
+     local function SetDead()
+          self.dead = true
+     end
+     local function DelayThenFade()
+          print("DelayThenFade")
+          transition.to(self.myText, {time = 3000, alpha = 0, onComplete = SetDead})
+     end
+     local function WaitForAMoment()
+          print("WaitForAMoment")
+          transition.to(self.myText, {time = 2000, alpha = 1, onComplete = DelayThenFade})
+     end
+     WaitForAMoment()
+     
 end
 
 function Message:Update()
